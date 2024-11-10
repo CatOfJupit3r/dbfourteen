@@ -1,0 +1,67 @@
+{
+    "files" : [],
+    "target" : "ESNext",
+    "lib" : [
+        "dom",
+        "dom.iterable",
+        "esnext"
+    ],
+    "allowJs" : false,
+    "skipLibCheck" : true,
+    "esModuleInterop" : true,
+    "allowSyntheticDefaultImports" : true,
+    "strict" : true,
+    "forceConsistentCasingInFileNames" : true,
+    "module" : "esnext",
+    "moduleResolution" : "node",
+    "resolveJsonModule" : true,
+    "isolatedModules" : true,
+    "noEmit" : true,
+    "noFallthroughCasesInSwitch" : true,
+    "jsx" : "react-jsx",
+    "types" : [
+        "vite/client",
+        "vite-plugin-svgr/client",
+        "node"
+    ],
+    "references" : [
+        {
+            "path" : "./tsconfig.app.json"
+        },
+        {
+            "path" : "./tsconfig.node.json"
+        }
+    ],
+    "compilerOptions" : {
+        "baseUrl" : "./src",
+        "paths" : {
+            "@components/*" : [
+                "./components/*"
+            ],
+            "@pages/*" : [
+                "./pages/*"
+            ],
+            "@styles/*" : [
+                "./styles/*"
+            ],
+            "@utils" : [
+                "./utils"
+            ],
+            "@services/*" : [
+                "./services/*"
+            ],
+            "@hooks/*" : [
+                "./hooks/*"
+            ],
+            "@models/*" : [
+                "./models/*"
+            ],
+            "@router/*" : [
+                "./router/*"
+            ],
+            "@context/*" : [
+                "./context/*"
+            ]
+        }
+    }
+}
