@@ -1,4 +1,6 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import { EMAIL_REGEX } from '@configs';
+import { getModelForClass, prop } from '@typegoose/typegoose';
+import { Types } from 'mongoose';
 
 /**
  * - user_id (унікальний ідентифікатор),
@@ -10,29 +12,29 @@ import { getModelForClass, prop } from '@typegoose/typegoose'
  * користувач).
  */
 export class UserClass {
-    @prop({ required: true, unique: true, index: true })
-    user_id: string
+    @prop({ required: true, unique: true })
+    user_id: Types.ObjectId;
 
     @prop({ required: true })
-    name: string
+    name: string;
 
-    @prop({ required: true, unique: true })
-    email: string
+    @prop({ required: true, unique: true, validate: EMAIL_REGEX })
+    email: string;
 
     @prop({ default: 'Wow... So empty!' })
-    bio: string
+    bio: string;
 
     @prop({ required: true })
-    created_at: Date
+    created_at: Date;
 
     @prop({ required: true, type: () => [String] })
-    following: string[]
+    following: string[];
 }
 
 const UserModel = getModelForClass(UserClass, {
     schemaOptions: {
         collection: 'users',
     },
-})
+});
 
-export default UserModel
+export default UserModel;

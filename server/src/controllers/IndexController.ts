@@ -1,13 +1,13 @@
-import { createRouteInController } from '@controllers/RouteInController'
+import { createRouteInController } from '@controllers/RouteInController';
 
 class IndexController {
     index = createRouteInController((req, res) => {
-        res.send('Welcome!')
-    })
+        res.status(200).send({ message: 'Welcome!' });
+    });
 
     health = createRouteInController((req, res) => {
-        res.send('OK')
-    })
+        res.status(200).send({ message: 'OK' });
+    });
 }
 
-export default new IndexController()
+export default new IndexController();

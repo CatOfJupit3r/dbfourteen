@@ -1,18 +1,19 @@
-import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
+import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { Types } from 'mongoose';
 
 @modelOptions({ schemaOptions: { _id: false } })
-class CommentClass {
-    @prop({ required: true, unique: true, index: true })
-    comment_id: string
-
-    @prop({ required: true, unique: true, index: true })
-    user_id: string
-
-    @prop({ default: 'Wow... So empty!' })
-    content: string
+export class CommentClass {
+    @prop({ required: true, unique: true })
+    comment_id: Types.ObjectId;
 
     @prop({ required: true })
-    created_at: Date
+    user_id: string;
+
+    @prop({ default: 'Wow... So empty!' })
+    content: string;
+
+    @prop({ required: true })
+    created_at: Date;
 }
 
 /**
@@ -25,22 +26,25 @@ class CommentClass {
  */
 export class PostClass {
     @prop({ required: true, unique: true, index: true })
-    user_id: string
+    post_id: Types.ObjectId;
+
+    @prop({ required: true, index: true })
+    user_id: Types.ObjectId;
 
     @prop({ default: 'Wow... So empty!' })
-    content: string
+    content: string;
 
     @prop({ required: true, type: () => [String] })
-    likes: string[]
+    likes: string[];
 
     @prop({ required: true, type: () => [CommentClass] })
-    comments: CommentClass[]
+    comments: CommentClass[];
 }
 
 const PostModel = getModelForClass(PostClass, {
     schemaOptions: {
         collection: 'posts',
     },
-})
+});
 
-export default PostModel
+export default PostModel;

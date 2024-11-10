@@ -1,8 +1,7 @@
-import DatabaseService from '@services/DatabaseService'
-import { Application } from 'express'
+import DatabaseService from '@services/DatabaseService';
 
-const setupExpress = async ({ app: _ }: { app: Application }) => {
-    await DatabaseService.setup()
-}
+const setupDatabase = async () => {
+    await DatabaseService.setup();
+};
 
-export default setupExpress
+export default setupDatabase;
