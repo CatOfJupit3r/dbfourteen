@@ -6,6 +6,7 @@
         ]
     },
     "compilerOptions" : {
+        "target": "es2022",
         "outDir" : "./dist",
         "rootDir" : "./src",
         "baseUrl" : "./src/",
@@ -27,9 +28,6 @@
             ],
             "@middlewares/*" : [
                 "./middlewares/*"
-            ],
-            "@config/*" : [
-                "./configs/*"
             ],
             "@routes/*" : [
                 "./routes/*"

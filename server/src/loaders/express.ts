@@ -1,9 +1,15 @@
-import { Application } from "express";
+import { errorHandlerMiddleware } from '@middlewares/ErrorHandlerMiddleware'
+import indexRoutes from '@routes/indexRoutes'
+import cors from 'cors'
+import express, { Application } from 'express'
 
 const setupExpress = async ({ app }: { app: Application }) => {
-  app.get("/", (req, res) => {
-    res.send("Welcome to Express & TypeScript Server");
-  });
+    app.use(cors())
+    app.use(express.json())
+
+    app.use('/', indexRoutes)
+
+    app.use(errorHandlerMiddleware)
 }
 
-export default setupExpress;
+export default setupExpress

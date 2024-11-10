@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import loaders from "./loaders";
-import { HOST, PORT } from "@config/env";
+import { HOST, PORT } from "@configs";
 
 const createApp = async () => {
   const app: Application = express();
