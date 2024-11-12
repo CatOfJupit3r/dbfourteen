@@ -31,9 +31,7 @@ class PostController {
         {
             body: z
                 .object({
-                    // comment_id: z.string(), created automatically
                     content: z.string().min(1).max(32768),
-                    // created_at: z.date(), assigned automatically
                 })
                 .merge(UserIdZodSchema),
             params: PostIdZodSchema,

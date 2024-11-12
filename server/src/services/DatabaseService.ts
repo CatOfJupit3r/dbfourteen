@@ -17,18 +17,34 @@ class DatabaseService {
         await this.fillWithMocksIfEmpty();
     };
 
-    public addFollowerToUser = async (userId: string, userToFollowId: string) => {
-        const user = await UserModel.findById(userToFollowId);
-        if (!user) throw new BadRequest('User not found');
-        const follower = await UserModel.findById(userId);
-        if (!follower) throw new BadRequest('Follower not found');
-        user.following.push(userId);
-        await this.saveDocument(user);
+    private async findUserById(userId: string): Promise<DocumentType<UserClass>>;
+    private async findUserById(userId: string, autoThrow: true): Promise<DocumentType<UserClass>>;
+    private async findUserById(userId: string, autoThrow: false): Promise<DocumentType<UserClass> | null>;
+    private async findUserById(userId: string, autoThrow: boolean = true) {
+        const user = await UserModel.findOne({ user_id: userId });
+        if (!user && autoThrow) throw new BadRequest('User not found');
+        return user;
+    }
+
+    private async findPostById(postId: string, autoThrow: true): Promise<DocumentType<PostClass>>;
+    private async findPostById(postId: string): Promise<DocumentType<PostClass>>;
+    private async findPostById(postId: string, autoThrow: false): Promise<DocumentType<PostClass>>;
+    private async findPostById(postId: string, autoThrow: boolean = false): Promise<DocumentType<PostClass> | null> {
+        const post = await PostModel.findOne({ post_id: postId });
+        if (!post && autoThrow) throw new BadRequest('Post not found');
+        return post;
+    }
+
+    public addFollowerToUser = async (newFollowerId: string, userToFollowId: string) => {
+        await this.findUserById(userToFollowId); // find if user to follow exists
+        const follower = await this.findUserById(newFollowerId, true);
+        if (follower.following.includes(userToFollowId)) return;
+        follower.following.push(userToFollowId);
+        await this.saveDocument(follower);
     };
 
     public addNewCommentToPost = async (postId: string, content: string, authorId: string) => {
-        const post = await PostModel.findById(postId);
-        if (!post) throw new BadRequest('Post not found');
+        const post = await this.findPostById(postId);
         const comment = {
             comment_id: new mongoose.Types.ObjectId(),
             user_id: authorId,
@@ -40,10 +56,9 @@ class DatabaseService {
     };
 
     public addUserToLikedPosts = async (userId: string, postId: string) => {
-        const user = await UserModel.findById(userId);
-        if (!user) throw new BadRequest('User not found');
-        const post = await PostModel.findById(postId);
-        if (!post) throw new BadRequest('Post not found');
+        await this.findUserById(userId, true); // state explicit throw
+        const post = await this.findPostById(postId);
+        if (post.likes.includes(userId)) return;
         post.likes.push(userId);
         await this.saveDocument(post);
     };
@@ -51,21 +66,21 @@ class DatabaseService {
     public getFreshPostsFromFollowing = async (userId: string, limit: number = 10) => {
         // Показати 10 найновіших постів від користувачів,
         // на яких підписаний певний користувач, відсортованих за created_at.
-        const user = await UserModel.findById(userId);
-        if (!user) throw new BadRequest('User not found');
+        const user = await this.findUserById(userId);
         return PostModel.aggregate([
+            // Збираємо пости від користувачів, на яких підписаний user
             {
                 $match: {
-                    user_id: {
-                        $in: user.following,
-                    },
+                    user_id: { $in: user.following.map((id) => new mongoose.Types.ObjectId(id)) },
                 },
             },
+            // Сортуємо за датою створення
             {
                 $sort: {
-                    likes: -1,
+                    created_at: -1,
                 },
             },
+            // І обмежуємо кількість
             {
                 $limit: limit,
             },
@@ -142,6 +157,13 @@ class DatabaseService {
                     coll: 'users',
                     pipeline: [
                         {
+                            $match: {
+                                following: {
+                                    $exists: false,
+                                },
+                            },
+                        },
+                        {
                             $project: {
                                 user_id: '$user_id',
                                 name: '$name',
@@ -161,6 +183,9 @@ class DatabaseService {
             {
                 $group: {
                     _id: '$user_id',
+                    user_id: {
+                        $first: '$user_id',
+                    },
                     name: {
                         $first: '$name',
                     },
@@ -184,7 +209,7 @@ class DatabaseService {
             // і сортуємо за кількістю підписників
             {
                 $sort: {
-                    followers: -1,
+                    user_id: 1,
                 },
             },
         ]);
