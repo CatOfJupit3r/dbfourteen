@@ -1,9 +1,20 @@
-import './styles/App.css';
+import MainUI from '@components/MainUI';
+import { LoginContextProvider } from '@context/LoginContext';
+import { UsersContextProvider } from '@context/UsersContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 function App() {
     return (
         <>
-            <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+            <ToastContainer />
+            <div>
+                <UsersContextProvider>
+                    <LoginContextProvider>
+                        <MainUI />
+                    </LoginContextProvider>
+                </UsersContextProvider>
+            </div>
         </>
     );
 }

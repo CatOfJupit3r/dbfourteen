@@ -8,10 +8,10 @@ export default defineConfig({
     base: '/',
     plugins: [
         react(),
-        tsconfigPaths(),
         dts({
             tsconfigPath: 'tsconfig.build.json',
         }),
+        tsconfigPaths(),
     ],
     preview: {
         port: 5173,
