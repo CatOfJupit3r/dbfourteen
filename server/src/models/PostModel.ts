@@ -39,6 +39,9 @@ export class PostClass {
 
     @prop({ required: true, type: () => [CommentClass] })
     comments: CommentClass[];
+
+    @prop({ required: true })
+    created_at: Date;
 }
 
 const PostModel = getModelForClass(PostClass, {
