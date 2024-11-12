@@ -27,7 +27,10 @@ class UserController {
         },
         {
             query: z.object({
-                limit: z.number().int().positive().max(64).nullable(),
+                limit: z
+                    .string()
+                    .refine((limit) => !isNaN(parseInt(limit)), 'Limit must be a number')
+                    .optional(),
             }),
             params: UserIdZodSchema,
         }
