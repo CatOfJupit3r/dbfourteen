@@ -83,23 +83,25 @@ const PostDisplay: FC<iDisplayPosts> = ({ post }) => {
                     </div>
                 ) : null}
                 {comments.length > 0 ? (
-                    <AnimatePresence className="mt-2 w-full">
-                        <h3 className="mb-1 font-semibold">Comments:</h3>
-                        {comments.map((comment) => (
-                            <motion.div
-                                key={comment.comment_id}
-                                className="mb-1 text-sm"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                            >
-                                <span className="font-semibold">
-                                    {users.find((u) => u.user_id === comment.user_id)?.name || 'Unknown User'}:
-                                </span>{' '}
-                                {comment.content}
-                                <span className="ml-2 text-xs text-gray-500">{formatDate(comment.created_at)}</span>
-                            </motion.div>
-                        ))}
+                    <AnimatePresence>
+                        <div className="mt-2 w-full">
+                            <h3 className="mb-1 font-semibold">Comments:</h3>
+                            {comments.map((comment) => (
+                                <motion.div
+                                    key={comment.comment_id}
+                                    className="mb-1 text-sm"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <span className="font-semibold">
+                                        {users.find((u) => u.user_id === comment.user_id)?.name || 'Unknown User'}:
+                                    </span>{' '}
+                                    {comment.content}
+                                    <span className="ml-2 text-xs text-gray-500">{formatDate(comment.created_at)}</span>
+                                </motion.div>
+                            ))}
+                        </div>
                     </AnimatePresence>
                 ) : null}
             </CardFooter>
