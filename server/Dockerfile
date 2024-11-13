@@ -1,5 +1,5 @@
 #Build stage
-FROM node:22-alpine as build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -22,6 +22,8 @@ COPY package*.json .
 RUN mkdir node_modules && npm ci --only=production
 
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/tsconfig-paths-bootstrap.js .
 COPY --from=build /app/tsconfig.json .
+COPY --from=build /app/src/mocks ./dist/mocks
 
 CMD ["npm", "run", "start"]
